@@ -1,0 +1,24 @@
+# Maven & build output
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE & OS
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Misc
+HELP.md
+README.md
+docker-compose.yml
+.docker-cache/
+
+
