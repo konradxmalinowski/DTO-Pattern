@@ -147,3 +147,64 @@ java -jar target/DTO-Pattern-0.0.1-SNAPSHOT.jar
 - This project uses Lombok. Make sure your IDE has Lombok annotation processing enabled.
 - For production, externalize config (e.g., environment variables) and never commit real credentials.
 - Consider adding validation, request DTOs, and error handling (problem+json) as next steps.
+
+---
+
+### Run with Docker 🐳
+
+Build the image (multi-stage):
+
+```bash
+docker build -t dto-pattern:latest .
+```
+
+Run the container against an external MySQL (adjust envs as needed):
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL="jdbc:mysql://host.docker.internal:3306/spring-dto?useSSL=false&allowPublicKeyRetrieval=true" \
+  -e SPRING_DATASOURCE_USERNAME=root \
+  -e SPRING_DATASOURCE_PASSWORD=root \
+  --name dto_app dto-pattern:latest
+```
+
+> On Linux without Docker Desktop, replace `host.docker.internal` with your host IP.
+
+---
+
+### Run with Docker Compose ⚓
+
+This repo includes `docker-compose.yml` that starts MySQL and the app together.
+
+Start services:
+
+```bash
+docker compose up -d --build
+```
+
+Check logs until app is ready:
+
+```bash
+docker compose logs -f app
+```
+
+Test:
+
+```bash
+curl -i http://localhost:8080/api/v1/users
+```
+
+Stop and remove containers, network, and volumes (data persists unless you remove the volume):
+
+```bash
+docker compose down
+# to also remove the MySQL volume data:
+docker compose down -v
+```
+
+Environment defaults in Compose:
+
+- `SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/spring-dto` (service-to-service)
+- `SPRING_DATASOURCE_USERNAME=root`
+- `SPRING_DATASOURCE_PASSWORD=root`
+- `SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop`
